@@ -21,4 +21,8 @@ typedef struct{
     uint8_t screen[SCREEN_WIDTH * SCREEN_HEIGHT]; // Monochrome display (64x32)
     uint8_t keypad[KEY_COUNT]; // Keypad state
 } Chip8;
+void chip8_init(Chip8 *chip8);
+void chip8_load_program(Chip8 *chip8, const uint8_t *program, size_t size);
+void chip8_emulate_cycle(Chip8 *chip8);
+void chip8_update_timers(Chip8 *chip8);
 #endif // CHIP8_H
