@@ -1,7 +1,7 @@
 #include "chip8.h"
 
 void chip8_init(Chip8 *chip) {
-  memset(&chip, 0, sizeof(Chip8));
+  memset(chip, 0, sizeof(Chip8));
   chip->pc = START_ADDRESS;
 }
 bool chip8_load_program(Chip8 *chip, const uint8_t *program, size_t size) {
@@ -28,7 +28,6 @@ void chip8_emulate_cycle(Chip8 *chip) {
       switch (NN) {
       case 0xE0: // Clear the display
         memset(chip->screen, 0, sizeof(chip->screen));
-        chip->pc += 2;
         break;
     case 0xEE: // Return from subroutine
       chip->sp--;
