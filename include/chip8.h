@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 #define MEMORY_SIZE 4096
 #define NUM_REGISTERS 16
 #define STACK_SIZE 16
@@ -40,7 +41,7 @@ typedef struct{
     uint8_t keypad[KEY_COUNT]; // Keypad state
 } Chip8;
 void chip8_init(Chip8 *chip8);
-void chip8_load_program(Chip8 *chip8, const uint8_t *program, size_t size);
+bool chip8_load_program(Chip8 *chip8, const uint8_t *program, size_t size);
 void chip8_emulate_cycle(Chip8 *chip8);
 void chip8_update_timers(Chip8 *chip8);
 #endif // CHIP8_H
