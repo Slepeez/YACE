@@ -70,27 +70,35 @@ void chip8_emulate_cycle(Chip8 *chip) {
     break;
   case 0x8:
     switch (N) {
-    case 0x0:
-      chip->registers[X] = chip->registers[Y];
-      break;
-    case 0x1:
-      chip->registers[X] |= chip->registers[Y];
-      break;
-    case 0x2:
-      chip->registers[X] &= chip->registers[Y];
-      break;
-    case 0x3:
-      chip->registers[X] ^= chip->registers[Y];
-      break;
-    case 0x4:
-      uint16_t result = chip->registers[X] + chip->registers[Y];
-      if (result > 255) {
-        chip->registers[0xF] = 1;
-      } else {
-        chip->registers[0xF] = 0;
-      }
-      chip->registers[X] = result & 0xFF;
-      break;
+      case 0x0:
+        chip->registers[X] = chip->registers[Y];
+        break;
+      case 0x1:
+        chip->registers[X] |= chip->registers[Y];
+        break;
+      case 0x2:
+        chip->registers[X] &= chip->registers[Y];
+        break;
+      case 0x3:
+        chip->registers[X] ^= chip->registers[Y];
+        break;
+      case 0x4:
+        uint16_t result = chip->registers[X] + chip->registers[Y];
+        if (result > 255) {
+          chip->registers[0xF] = 1;
+        } else {
+          chip->registers[0xF] = 0;
+        }
+        chip->registers[X] = result & 0xFF;
+        break;
+      case 0x5:
+        if (chip->registers[X] > chip->registers[Y]) {
+          chip->registers[0xF] = 1;
+        } else {
+          chip->registers[0xF] = 0;
+        }
+        chip->registers[X] -= chip->registers[Y];
+        break;
     }
   }
 }
