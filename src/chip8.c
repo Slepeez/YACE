@@ -26,15 +26,15 @@ void chip8_emulate_cycle(Chip8 *chip) {
   uint16_t NNN = opcode & 0x0FFF; // Extract the NNN value (last three bytes)
   // Execute opcode
   switch (opcode & 0xF000) {
-  case 0x0: // 0x0NNN: Calls RCA 1802 program at address NNN (ignored)
-    switch (NN) {
-    case 0xE0: // Clear the display
-      memset(chip->screen, 0, sizeof(chip->screen));
-      break;
-    case 0xEE: // Return from subroutine
-      chip->sp--;
-      chip->pc = chip->stack[chip->sp];
-      break;
+    case 0x0: // 0x0NNN: Calls RCA 1802 program at address NNN (ignored)
+      switch (NN) {
+      case 0xE0: // Clear the display
+        memset(chip->screen, 0, sizeof(chip->screen));
+        break;
+      case 0xEE: // Return from subroutine
+        chip->sp--;
+        chip->pc = chip->stack[chip->sp];
+        break;
     default:
       // Handle unknown opcode
       break;
