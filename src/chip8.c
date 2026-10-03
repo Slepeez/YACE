@@ -43,46 +43,48 @@ void chip8_emulate_cycle(Chip8 *chip) {
   case 0x1: // 0x1NNN: Jump to address NNN
     chip->pc = NNN;
     break;
-  case 0x2:
+  case 0x2: // 0x2NNN: Call subroutine at NNN
     chip->stack[chip->sp++] = chip->pc;
     chip->pc = NNN;
     break;
-  case 0x3:
+  case 0x3: // 0x3XNN: Skip next instruction if VX == NN 
     if (chip->registers[X] == NN) {
       chip->pc += 2;
     }
     break;
-  case 0x4:
+  case 0x4: // 0x4XNN: Skip next instruction if VX != NN
     if (chip->registers[X] != NN) {
       chip->pc += 2;
     }
     break;
-  case 0x5:
+  case 0x5: // 0x5XY0: Skip next instruction if VX == VY
     if (chip->registers[X] == chip->registers[Y]) {
       chip->pc += 2;
     }
     break;
-  case 0x6:
+  case 0x6: // 0x6XNN: Set VX to NN
     chip->registers[X] = NN;
     break;
-  case 0x7:
+  case 0x7: // 0x7XNN: Add NN to VX (without carry)
     chip->registers[X] += NN;
     break;
-  case 0x8:
+  case 0x8: // 0x8XYN: Various arithmetic and bitwise operations
+   // The last nibble (N) determines the specific operation
     switch (N) {
-      case 0x0:
+      // Handle different arithmetic and bitwise operations based on the last nibble (N)
+      case 0x0: // Set VX to the value of VY
         chip->registers[X] = chip->registers[Y];
         break;
-      case 0x1:
+      case 0x1: // Set VX to VX OR VY
         chip->registers[X] |= chip->registers[Y];
         break;
-      case 0x2:
+      case 0x2: //  Set VX to VX AND VY
         chip->registers[X] &= chip->registers[Y];
         break;
-      case 0x3:
+      case 0x3: // Set VX to VX XOR VY
         chip->registers[X] ^= chip->registers[Y];
         break;
-      case 0x4:
+      case 0x4: // Add VY to VX, set VF to 1 if there's a carry, else 0
         uint16_t result = chip->registers[X] + chip->registers[Y];
         if (result > 255) {
           chip->registers[0xF] = 1;
@@ -91,7 +93,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
         }
         chip->registers[X] = result & 0xFF;
         break;
-      case 0x5:
+      case 0x5: // Subtract VY from VX, set VF to 0 if there's a borrow, else 1
         if (chip->registers[X] > chip->registers[Y]) {
           chip->registers[0xF] = 1;
         } else {
@@ -99,11 +101,11 @@ void chip8_emulate_cycle(Chip8 *chip) {
         }
         chip->registers[X] -= chip->registers[Y];
         break;
-      case 0x6:
+      case 0x6: // Store the least significant bit of VX in VF, then shift VX right by 1
         chip->registers[0xF] = chip->registers[X] & 1;
         chip->registers[X] >>= 1;
         break;
-      case 0x7:
+      case 0x7: // Set VX to VY minus VX, set VF to 0 if there's a borrow, else 1
         if (chip->registers[Y] > chip->registers[X]) {
           chip->registers[0xF] = 1;
         } else {
@@ -111,7 +113,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
         }
         chip->registers[X] = chip->registers[Y] - chip->registers[X];
         break;
-      case 0xE:
+      case 0xE: // Store the most significant bit of VX in VF, then shift VX left by 1
         chip->registers[0xF] = (chip->registers[X] & 0x80) >> 7;
         chip->registers[X] <<= 1;
         break;
@@ -119,7 +121,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
         // Handle unknown opcode
         break;
     }
-    case 0x9:
+    case 0x9: // 0x9XY0: Skip next instruction if VX != VY
       if(chip->registers[X] != chip->registers[Y]){
         chip->pc += 2;
       }
