@@ -1,5 +1,5 @@
 #include "chip8.h"
-
+#include <stdlib.h>
 void chip8_init(Chip8 *chip) {
   memset(chip, 0, sizeof(Chip8));
   chip->pc = START_ADDRESS;
