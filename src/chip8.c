@@ -150,10 +150,10 @@ void chip8_emulate_cycle(Chip8 *chip) {
     case 0xC: // 0xCXNN: Set VX to a random number AND NN
       chip->registers[X] = (rand() % 256) & NN;
       break;
-    case 0xD:{
-      int x = chip->registers[X] % SCREEN_WIDTH;
-      int y = chip->registers[Y] % SCREEN_HEIGHT;
-      int height = N;
+    case 0xD:{ // 0xDXYN: Draw a sprite at coordinate (VX, VY) with width 8 pixels and height N pixels
+      int x = chip->registers[X] % SCREEN_WIDTH; // X coordinate of the sprite
+      int y = chip->registers[Y] % SCREEN_HEIGHT; // Y coordinate of the sprite
+      int height = N; // Height of the sprite (N pixels)
       chip->registers[0xF] = 0; // Reset VF (collision flag)
       for(int row = 0; row < height; row++){
         uint8_t sprite_byte = chip->memory[chip->I + row];
@@ -170,7 +170,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
         }
       }
       break;
-    } // 0xDXYN: Draw a sprite at (VX, VY) with width 8 pixels and height N pixels
+    } 
     case 0xE: // 0xEX9E and 0xEXA1: Skip next instruction based on key press
       switch(NN) {
         case 0x9E:
