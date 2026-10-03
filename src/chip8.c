@@ -1,16 +1,26 @@
 #include "chip8.h"
 #include <stdlib.h>
+#include <stdio.h>
 void chip8_init(Chip8 *chip) {
   memset(chip, 0, sizeof(Chip8));
   chip->pc = START_ADDRESS;
 }
 bool chip8_load_program(Chip8 *chip, const uint8_t *program, size_t size) {
-  if (size > MEMORY_SIZE - START_ADDRESS) {
-    // Handle error: program too large to fit in memory
+  FILE *file = fopen(program, "rb");
+  if (!file) {
+    fprintf(stderr, "Failed to open program file: %s\n", program);
     return false;
   }
-  memcpy(&chip->memory[START_ADDRESS], program, size);
-  return true;
+  fseek(file, 0, SEEK_END);
+  long file_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  if (file_size > MEMORY_SIZE - START_ADDRESS) {
+    fprintf(stderr, "Program size exceeds available memory.\n");
+    fclose(file);
+    return false;
+  }
+  fread(chip->memory + START_ADDRESS, 1, file_size, file);
+  fclose(file);
 }
 void chip8_emulate_cycle(Chip8 *chip) {
   // Fetch opcode
