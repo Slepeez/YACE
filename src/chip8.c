@@ -30,10 +30,8 @@ bool chip8_load_program(Chip8 *chip, const uint8_t *program, size_t size) {
 }
 void chip8_emulate_cycle(Chip8 *chip) {
   // Fetch opcode
-  uint16_t opcode =
-      (chip->memory[chip->pc] << 8) | (chip->memory[chip->pc + 1]);
-  chip->pc +=
-      2; // Increment the program counter to point to the next instruction
+  uint16_t opcode = (chip->memory[chip->pc] << 8) | (chip->memory[chip->pc + 1]);
+  chip->pc += 2; // Increment the program counter to point to the next instruction
   // Decode opcode
   uint8_t X = (opcode & 0x0F00) >> 8; // Extract the X register index
   uint8_t Y = (opcode & 0x00F0) >> 4; // Extract the Y register index
