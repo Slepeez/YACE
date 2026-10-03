@@ -103,6 +103,15 @@ void chip8_emulate_cycle(Chip8 *chip) {
         chip->registers[0xF] = chip->registers[X] & 1;
         chip->registers[X] >>= 1;
         break;
+      case 0x7:
+        if (chip->registers[Y] > chip->registers[X]) {
+          chip->registers[0xF] = 1;
+        } else {
+          chip->registers[0xF] = 0;
+        }
+        chip->registers[X] = chip->registers[Y] - chip->registers[X];
+        break;
+        
     }
   }
 }
