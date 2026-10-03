@@ -99,6 +99,10 @@ void chip8_emulate_cycle(Chip8 *chip) {
         }
         chip->registers[X] -= chip->registers[Y];
         break;
+      case 0x6:
+        chip->registers[0xF] = chip->registers[X] & 1;
+        chip->registers[X] >>= 1;
+        break;
     }
   }
 }
