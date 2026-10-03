@@ -110,7 +110,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
         chip->registers[X] = result & 0xFF;
         break;
       case 0x5: // Subtract VY from VX, set VF to 0 if there's a borrow, else 1
-        if (chip->registers[X] > chip->registers[Y]) {
+        if (chip->registers[X] >= chip->registers[Y]) {
           chip->registers[0xF] = 1;
         } else {
           chip->registers[0xF] = 0;
@@ -122,7 +122,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
         chip->registers[X] >>= 1;
         break;
       case 0x7: // Set VX to VY minus VX, set VF to 0 if there's a borrow, else 1
-        if (chip->registers[Y] > chip->registers[X]) {
+        if (chip->registers[Y] >= chip->registers[X]) {
           chip->registers[0xF] = 1;
         } else {
           chip->registers[0xF] = 0;
@@ -137,6 +137,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
         // Handle unknown opcode
         break;
     }
+    break;
     case 0x9: // 0x9XY0: Skip next instruction if VX != VY
       if(chip->registers[X] != chip->registers[Y]){
         chip->pc += 2;
