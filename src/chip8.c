@@ -124,6 +124,5 @@ void chip8_emulate_cycle(Chip8 *chip) {
         chip->pc += 2;
       }
       break;
-      
   }
 }
