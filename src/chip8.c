@@ -129,6 +129,11 @@ void chip8_emulate_cycle(Chip8 *chip) {
     case 0xA: // 0xANNN: Set I to the address NNN
       chip->I = NNN;
       break;
-      
+    case 0xB: // 0xBNNN: Jump to address NNN + V0
+      chip->pc = NNN + chip->registers[0];
+      break;
+    case 0xC: // 0xCXNN: Set VX to a random number AND NN
+      chip->registers[X] = (rand() % 256) & NN;
+      break;
   }
 }
