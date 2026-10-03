@@ -175,12 +175,12 @@ void chip8_emulate_cycle(Chip8 *chip) {
     case 0xE: // 0xEX9E and 0xEXA1: Skip next instruction based on key press
       switch(NN) {
         case 0x9E:
-          if(chip->keypad[chip->registers[X]] != 0){
+          if(chip->keypad[chip->registers[X]]){
             chip->pc += 2; // Skip next instruction if key in VX is pressed
           }
           break;
         case 0xA1:
-          if(chip->keypad[chip->registers[X]] == 0){
+          if(!chip->keypad[chip->registers[X]]){
             chip->pc += 2; // Skip next instruction if key in VX is not pressed
           }
           break;
