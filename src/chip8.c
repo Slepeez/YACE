@@ -111,7 +111,19 @@ void chip8_emulate_cycle(Chip8 *chip) {
         }
         chip->registers[X] = chip->registers[Y] - chip->registers[X];
         break;
-        
+      case 0xE:
+        chip->registers[0xF] = (chip->registers[X] & 0x80) >> 7;
+        chip->registers[X] <<= 1;
+        break;
+      default:
+        // Handle unknown opcode
+        break;
     }
+    case 0x9:
+      if(chip->registers[X] != chip->registers[Y]){
+        chip->pc += 2;
+      }
+      break;
+    
   }
 }
