@@ -135,5 +135,32 @@ void chip8_emulate_cycle(Chip8 *chip) {
     case 0xC: // 0xCXNN: Set VX to a random number AND NN
       chip->registers[X] = (rand() % 256) & NN;
       break;
+    case 0xD:{
+      int x = chip->registers[X] % SCREEN_WIDTH;
+      int y = chip->registers[Y] % SCREEN_HEIGHT;
+      int height = N;
+      chip->registers[0xF] = 0; // Reset VF (collision flag)
+      for(int row = 0; row < height; row++){
+        uint8_t sprite_byte = chip->memory[chip->I + row];
+        if(y + row >= SCREEN_HEIGHT) break; // Prevent drawing outside the screen
+        for(int col = 0; col < 8; col++){
+          if(x + col >= SCREEN_WIDTH) break; // Prevent drawing outside the screen
+          if ((sprite_byte & (0x80 >> col)) != 0) { // Check if the pixel in the sprite is set
+            int screen_index = (y + row) * SCREEN_WIDTH + (x + col);
+            if(chip->screen[screen_index] == 1){
+              chip->registers[0xF] = 1; // Set VF if there was a collision
+              if(chip->screen[screen_index] == 1){
+                chip->screen[screen_index] = 0; // Erase the pixel
+              } else {
+                chip->screen[screen_index] = 1; // Draw the pixel
+              }
+            chip->screen[screen_index] ^= 1; // XOR the pixel
+            }
+          }
+        }
+      }
+      bool request_redraw = true; // Set a flag to indicate that the screen needs to be redrawn
+      break;
+    } // 0xDXYN: Draw a sprite at (VX, VY) with width 8 pixels and height N pixels
   }
 }
