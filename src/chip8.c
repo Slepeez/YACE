@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 void chip8_init(Chip8 *chip) {
+  // Initialize the Chip8 system
   memset(chip, 0, sizeof(Chip8));
   chip->pc = START_ADDRESS;
 }
@@ -14,11 +15,13 @@ bool chip8_load_program(Chip8 *chip, const uint8_t *program, size_t size) {
   fseek(file, 0, SEEK_END);
   long file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
+  // Check if the program size exceeds available memory
   if (file_size > MEMORY_SIZE - START_ADDRESS) {
     fprintf(stderr, "Program size exceeds available memory.\n");
     fclose(file);
     return false;
   }
+  // Load the program into memory starting at the start address
   size_t bytes_read = fread(chip->memory + START_ADDRESS, 1, file_size, file);
   if (bytes_read != file_size) {
     fprintf(stderr, "Failed to read the entire program file.\n");
