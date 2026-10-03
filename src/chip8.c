@@ -173,7 +173,21 @@ void chip8_emulate_cycle(Chip8 *chip) {
       break;
     } // 0xDXYN: Draw a sprite at (VX, VY) with width 8 pixels and height N pixels
     case 0xE: // 0xEX9E and 0xEXA1: Skip next instruction based on key press
-    
+      switch(NN) {
+        case 0x9E:
+          if(chip->keypad[chip->registers[X]] != 0){
+            chip->pc += 2; // Skip next instruction if key in VX is pressed
+          }
+          break;
+        case 0xA1:
+          if(chip->keypad[chip->registers[X]] == 0){
+            chip->pc += 2; // Skip next instruction if key in VX is not pressed
+          }
+          break;
+        default:
+          // Handle unknown opcode
+          break;
+      }
       break;
   }
 }
