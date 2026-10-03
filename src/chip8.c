@@ -149,17 +149,11 @@ void chip8_emulate_cycle(Chip8 *chip) {
             int screen_index = (y + row) * SCREEN_WIDTH + (x + col);
             if(chip->screen[screen_index] == 1){
               chip->registers[0xF] = 1; // Set VF if there was a collision
-              if(chip->screen[screen_index] == 1){
-                chip->screen[screen_index] = 0; // Erase the pixel
-              } else {
-                chip->screen[screen_index] = 1; // Draw the pixel
-              }
-            chip->screen[screen_index] ^= 1; // XOR the pixel
             }
+            chip->screen[screen_index] ^= 1; // XOR the pixel onto the screen
           }
         }
       }
-      bool request_redraw = true; // Set a flag to indicate that the screen needs to be redrawn
       break;
     } // 0xDXYN: Draw a sprite at (VX, VY) with width 8 pixels and height N pixels
   }
