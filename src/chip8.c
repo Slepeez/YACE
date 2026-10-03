@@ -19,8 +19,14 @@ bool chip8_load_program(Chip8 *chip, const uint8_t *program, size_t size) {
     fclose(file);
     return false;
   }
-  fread(chip->memory + START_ADDRESS, 1, file_size, file);
+  size_t bytes_read = fread(chip->memory + START_ADDRESS, 1, file_size, file);
+  if (bytes_read != file_size) {
+    fprintf(stderr, "Failed to read the entire program file.\n");
+    fclose(file);
+    return false;
+  }
   fclose(file);
+  return true;
 }
 void chip8_emulate_cycle(Chip8 *chip) {
   // Fetch opcode
@@ -166,5 +172,8 @@ void chip8_emulate_cycle(Chip8 *chip) {
       }
       break;
     } // 0xDXYN: Draw a sprite at (VX, VY) with width 8 pixels and height N pixels
+    case 0xE: // 0xEX9E and 0xEXA1: Skip next instruction based on key press
+    
+      break;
   }
 }
