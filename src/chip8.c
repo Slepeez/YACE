@@ -126,5 +126,9 @@ void chip8_emulate_cycle(Chip8 *chip) {
         chip->pc += 2;
       }
       break;
+    case 0xA: // 0xANNN: Set I to the address NNN
+      chip->I = NNN;
+      break;
+      
   }
 }
