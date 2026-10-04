@@ -213,6 +213,12 @@ void chip8_emulate_cycle(Chip8 *chip) {
         case 0x15:
           chip->delay_timer = chip->registers[X]; // Set the delay timer to VX
           break;
+        case 0x18:
+          chip->sound_timer = chip->registers[X]; // Set the sound timer to VX
+          break;
+        case 0x1E:
+          chip->I += chip->registers[X]; // Add VX to I
+          break;
         default:
           // Handle unknown opcode
           break;
