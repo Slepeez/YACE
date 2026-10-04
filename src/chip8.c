@@ -190,6 +190,32 @@ void chip8_emulate_cycle(Chip8 *chip) {
           // Handle unknown opcode
           break;
       }
+    case 0xF: // 0xFXNN: Various operations based on the last two bytes (NN)
+      switch(NN){
+        case 0x07:
+          chip->registers[X] = chip->delay_timer; // Set VX to the value of the delay timer
+          break;
+        case 0x0A: 
+          // Wait for a key press and store the result in VX
+          int key_pressed = -1;
+          for(int i = 0; i < KEY_COUNT; i++){
+            if(chip->keypad[i]){
+              key_pressed = i;
+              chip->registers[X] = i; // Store the key index in VX
+              break;
+            }
+          }
+          if(key_pressed == -1){
+            chip->pc -= 2; // Repeat this instruction until a key is pressed
+          }
+          break;
+        case 0x15:
+          chip->delay_timer = chip->registers[X]; // Set the delay timer to VX
+          break;
+        default:
+          // Handle unknown opcode
+          break;
+      }
       break;
   }
 }
