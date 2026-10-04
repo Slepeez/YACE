@@ -245,3 +245,11 @@ void chip8_emulate_cycle(Chip8 *chip) {
       break;
   }
 }
+void chip8_update_timers(Chip8 *chip) {
+  if (chip->delay_timer > 0) {
+    chip->delay_timer--;
+  }
+  if (chip->sound_timer > 0) {
+    chip->sound_timer--;
+  }
+}
