@@ -219,6 +219,24 @@ void chip8_emulate_cycle(Chip8 *chip) {
         case 0x1E:
           chip->I += chip->registers[X]; // Add VX to I
           break;
+        case 0x29: // Set I to the location of the sprite for the character in VX (fontset)
+          chip->I = 0x050 + (chip->registers[X] * 5); // Each character is 5 bytes long
+          break;
+        case 0x33: // Store the binary-coded decimal representation of VX at I, I+1, and I+2
+          chip->memory[chip->I] = (chip->registers[X] / 100) % 10; // Hundreds digit
+          chip->memory[chip->I + 1] = (chip->registers[X] / 10) % 10; // Tens digit
+          chip->memory[chip->I + 2] = chip->registers[X] % 10; // Ones digit
+          break;
+        case 0x55: // Store registers V0 through VX in memory starting at address I
+          for(int i = 0; i <= X; i++){
+            chip->memory[chip->I + i] = chip->registers[i];
+          }
+          break;
+        case 0x65: // Read registers V0 through VX from memory starting at address
+          for(int i = 0; i <= X; i++){
+            chip->registers[i] = chip->memory[chip->I + i];
+          }
+          break;
         default:
           // Handle unknown opcode
           break;
