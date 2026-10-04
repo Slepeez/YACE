@@ -31,7 +31,7 @@ const unsigned char fontset[80] = {
 };
 typedef struct{
     uint16_t I; // Index register
-    uint16_t pc;
+    uint16_t pc; // Program counter
     uint8_t registers[NUM_REGISTERS]; // General purpose registers V0-VF
     uint8_t memory[MEMORY_SIZE]; // 4K memory
     uint16_t stack[STACK_SIZE]; // Stack for subroutine calls
