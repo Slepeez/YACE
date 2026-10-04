@@ -156,24 +156,30 @@ void chip8_emulate_cycle(Chip8 *chip) {
       chip->registers[X] = (rand() % 256) & NN;
       break;
     case 0xD:{ // 0xDXYN: Draw a sprite at coordinate (VX, VY) with width 8 pixels and height N pixels
-      int x = chip->registers[X] % SCREEN_WIDTH; // X coordinate of the sprite
-      int y = chip->registers[Y] % SCREEN_HEIGHT; // Y coordinate of the sprite
-      int height = N; // Height of the sprite (N pixels)
-      chip->registers[0xF] = 0; // Reset VF (collision flag)
-      for(int row = 0; row < height; row++){
+      uint8_t x_pos = chip->registers[X] % SCREEN_WIDTH;
+      uint8_t y_pos = chip->registers[Y] % SCREEN_HEIGHT;
+
+      chip->registers[0xF] = 0;
+
+      for (int row = 0; row < N; row++) {
         uint8_t sprite_byte = chip->memory[chip->I + row];
-        if(y + row >= SCREEN_HEIGHT) break; // Prevent drawing outside the screen
-        for(int col = 0; col < 8; col++){
-          if(x + col >= SCREEN_WIDTH) break; // Prevent drawing outside the screen
-          if ((sprite_byte & (0x80 >> col)) != 0) { // Check if the pixel in the sprite is set
-            int screen_index = (y + row) * SCREEN_WIDTH + (x + col);
-            if(chip->screen[screen_index] == 1){
-              chip->registers[0xF] = 1; // Set VF if there was a collision
-            }
-            chip->screen[screen_index] ^= 1; // XOR the pixel onto the screen
+
+        for (int col = 0; col < 8; col++) {
+           uint8_t sprite_pixel = sprite_byte & (0x80 >> col);
+
+          if (sprite_pixel) {
+              if (x_pos + col < SCREEN_WIDTH && y_pos + row < SCREEN_HEIGHT) {
+                  int idx = (y_pos + row) * SCREEN_WIDTH + (x_pos + col);
+
+                  if (chip->screen[idx] == 1) {
+                      chip->registers[0xF] = 1;
+                  }
+
+                chip->screen[idx] ^= 1;
+              }
           }
         }
-      }
+      } 
       break;
     } 
     case 0xE: // 0xEX9E and 0xEXA1: Skip next instruction based on key press
