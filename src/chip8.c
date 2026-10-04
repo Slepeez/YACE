@@ -41,7 +41,8 @@ void chip8_emulate_cycle(Chip8 *chip) {
   uint8_t Y = (opcode & 0x00F0) >> 4; // Extract the Y register index
   uint8_t N = opcode & 0x000F;        // Extract the N value (last nibble)
   uint8_t NN = opcode & 0x00FF;       // Extract the NN value (last two bytes)
-  uint16_t NNN = opcode & 0x0FFF; // Extract the NNN value (last three bytes)
+  uint16_t NNN = opcode & 0x0FFF;
+  printf("Opcode: %04X, PC: %04X, I: %04X\n", opcode, chip->pc, chip->I);
   // Execute opcode
   switch (opcode & 0xF000) {
     case 0x0: // 0x0NNN: Calls RCA 1802 program at address NNN (ignored)
