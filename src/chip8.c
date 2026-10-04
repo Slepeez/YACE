@@ -5,6 +5,7 @@ void chip8_init(Chip8 *chip) {
   // Initialize the Chip8 system
   memset(chip, 0, sizeof(Chip8));
   chip->pc = START_ADDRESS;
+  memcpy(chip->memory[0x050], fontset, sizeof(fontset)); // Load fontset into memory
 }
 bool chip8_load_program(Chip8 *chip, const uint8_t *program, size_t size) {
   FILE *file = fopen(program, "rb");
