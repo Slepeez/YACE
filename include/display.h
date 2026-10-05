@@ -11,7 +11,7 @@ typedef struct {
     SDL_Renderer *renderer;
     SDL_Texture *texture;
 } Display;
-void display_init(Display *display, const char *title);
+bool display_init(Display *display, const char *title);
 void display_destroy(Display *display);
 void display_update(Display *display, const uint8_t *buffer);
 #endif // DISPLAY_H
