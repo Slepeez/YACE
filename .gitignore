@@ -9,5 +9,6 @@ compile_commands.json
 *.bin
 *.exe
 *.o
+out/
 
 __cmake_systeminformation/
