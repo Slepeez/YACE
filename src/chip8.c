@@ -105,12 +105,9 @@ void chip8_emulate_cycle(Chip8 *chip) {
         break;
       case 0x4: // Add VY to VX, set VF to 1 if there's a carry, else 0
         uint16_t result = chip->registers[X] + chip->registers[Y];
-        if (result > 255) {
-          chip->registers[0xF] = 1;
-        } else {
-          chip->registers[0xF] = 0;
-        }
+        uint8_t carry = (result > 0xFF) ? 1 : 0;
         chip->registers[X] = result & 0xFF;
+        chip->registers[0xF] = carry;
         break;
       case 0x5: // Subtract VY from VX, set VF to 0 if there's a borrow, else 1
         if (chip->registers[X] >= chip->registers[Y]) {
@@ -198,6 +195,7 @@ void chip8_emulate_cycle(Chip8 *chip) {
           // Handle unknown opcode
           break;
       }
+      break;
     case 0xF: // 0xFXNN: Various operations based on the last two bytes (NN)
       switch(NN){
         case 0x07:
